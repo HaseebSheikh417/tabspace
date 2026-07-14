@@ -1,16 +1,33 @@
-import Dexie, { type Table } from 'dexie';
+import Dexie from 'dexie';
+
 import type { Task } from '../features/tasks/task.types';
+import type {
+  Workspace,
+  AppSetting,
+} from '../features/workspace/workspace.types';
 
-class TabspaceDatabase extends Dexie {
-  tasks!: Table<Task, string>;
+export type TabspaceDatabase = Dexie & {
+  tasks: Dexie.Table<Task, string>;
+  workspaces: Dexie.Table<Workspace, string>;
+  app_settings: Dexie.Table<AppSetting, string>;
+};
 
-  constructor() {
-    super('tabspace_db');
+export const db = new Dexie('tabspace_db') as TabspaceDatabase;
 
-    this.version(1).stores({
-      tasks: 'id, completed, createdAt, updatedAt',
+db.version(1).stores({
+  tasks: 'id, completed, createdAt, updatedAt',
+});
+
+db.version(2)
+  .stores({
+    tasks: 'id, workspaceId, completed, createdAt, updatedAt',
+    workspaces: 'id, isDefault, createdAt',
+    app_settings: 'key',
+  })
+  .upgrade(async (tx: Dexie.Transaction) => {
+    await tx.table('tasks').toCollection().modify((task: any) => {
+      if (!task.workspaceId) {
+        task.workspaceId = '__legacy__';
+      }
     });
-  }
-}
-
-export const db = new TabspaceDatabase();
+  });

@@ -4,8 +4,8 @@ import type { Task } from './task.types';
 
 type TaskStore = {
   tasks: Task[];
-  loadTasks: () => Promise<void>;
-  addTask: (title: string) => Promise<void>;
+  loadTasks: (workspaceId: string) => Promise<void>;
+  addTask: (title: string, workspaceId: string) => Promise<void>;
   toggleTask: (id: string) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
 };
@@ -13,14 +13,14 @@ type TaskStore = {
 export const useTaskStore = create<TaskStore>((set) => ({
   tasks: [],
 
-  loadTasks: async () => {
-    const tasks = await taskService.getAll();
+  loadTasks: async (workspaceId: string) => {
+    const tasks = await taskService.getByWorkspace(workspaceId);
     set({ tasks });
   },
 
-  addTask: async (title: string) => {
+  addTask: async (title: string, workspaceId: string) => {
     if (!title.trim()) return;
-    const task = await taskService.add(title);
+    const task = await taskService.add(title, workspaceId);
     set((state) => ({ tasks: [task, ...state.tasks] }));
   },
 

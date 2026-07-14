@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { TaskInput } from '../features/tasks/TaskInput';
 import { TaskList } from '../features/tasks/TaskList';
+import { useWorkspaceStore } from '../features/workspace/workspace.store';
+import { WorkspaceSwitcher } from '../features/workspace/WorkspaceSwitcher';
 
 // function getGreeting(): string {
 //   const h = new Date().getHours();
@@ -31,11 +33,19 @@ function getTodayShort(): string {
 
 export function App() {
   const [time, setTime] = useState(getFormattedTime);
+  const bootstrap = useWorkspaceStore((s) => s.bootstrap);
+  const isBootstrapped = useWorkspaceStore((s) => s.isBootstrapped);
+
+  useEffect(() => {
+    bootstrap();
+  }, [bootstrap]);
 
   useEffect(() => {
     const id = setInterval(() => setTime(getFormattedTime()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  if (!isBootstrapped) return null;
 
   return (
     <div className="app">
@@ -46,9 +56,8 @@ export function App() {
           <div>
             <h1 className="app-name">Tabspace</h1>
           </div>
+          <WorkspaceSwitcher />
         </div>
-
-        <p className="app-tagline">A fast workspace in every new tab.</p>
 
         <div className="app-header-right">
           <span className="app-time" aria-live="polite" aria-label="Current time">{time}</span>

@@ -10,14 +10,19 @@ function now(): string {
 }
 
 export const taskService = {
-  async getAll(): Promise<Task[]> {
-    return db.tasks.orderBy('createdAt').reverse().toArray();
+  async getByWorkspace(workspaceId: string): Promise<Task[]> {
+    return db.tasks
+      .where('workspaceId')
+      .equals(workspaceId)
+      .reverse()
+      .sortBy('createdAt');
   },
 
-  async add(title: string): Promise<Task> {
+  async add(title: string, workspaceId: string): Promise<Task> {
     const timestamp = now();
     const task: Task = {
       id: generateId(),
+      workspaceId,
       title: title.trim(),
       completed: false,
       createdAt: timestamp,

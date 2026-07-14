@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTaskStore } from './task.store';
+import { useWorkspaceStore } from '../workspace/workspace.store';
 import type { Task } from './task.types';
 
 function TaskItem({ task }: { task: Task }) {
@@ -52,10 +53,14 @@ function TaskItem({ task }: { task: Task }) {
 export function TaskList() {
   const tasks = useTaskStore((s) => s.tasks);
   const loadTasks = useTaskStore((s) => s.loadTasks);
+  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
+  // Reload tasks whenever the active workspace changes
   useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+    if (activeWorkspace) {
+      loadTasks(activeWorkspace.id);
+    }
+  }, [activeWorkspace, loadTasks]);
 
   const pending = tasks.filter((t) => !t.completed);
   const completed = tasks.filter((t) => t.completed);

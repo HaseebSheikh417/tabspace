@@ -1,15 +1,17 @@
 import { useState, type FormEvent } from 'react';
 import { useTaskStore } from './task.store';
+import { useWorkspaceStore } from '../workspace/workspace.store';
 
 export function TaskInput() {
   const [value, setValue] = useState('');
   const addTask = useTaskStore((s) => s.addTask);
+  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const trimmed = value.trim();
-    if (!trimmed) return;
-    await addTask(trimmed);
+    if (!trimmed || !activeWorkspace) return;
+    await addTask(trimmed, activeWorkspace.id);
     setValue('');
   };
 
