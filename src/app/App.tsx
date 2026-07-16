@@ -3,6 +3,7 @@ import { TaskInput } from '../features/tasks/TaskInput';
 import { TaskList } from '../features/tasks/TaskList';
 import { useWorkspaceStore } from '../features/workspace/workspace.store';
 import { WorkspaceSwitcher } from '../features/workspace/WorkspaceSwitcher';
+import { Link } from 'react-router-dom';
 // function getGreeting(): string {
 //   const h = new Date().getHours();
 //   if (h < 12) return 'Good morning';
@@ -68,8 +69,14 @@ export function App() {
               </li>
             </ul>
             <form className="d-flex">
-              <input className="form-control me-2 bg-dark text-light border-secondary" type="search" placeholder="Search" aria-label="Search" />
-              <button className="btn btn-outline-primary" type="submit">Search</button>
+              {false ? (
+                <button className="btn btn-outline-primary">Logout</button>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-outline-primary me-2">Login</Link>
+                  <Link to="/register" className="btn btn-outline-primary">Register</Link>
+                </>
+              )}
             </form>
           </div>
         </div>
