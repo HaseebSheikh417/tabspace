@@ -3,7 +3,6 @@ import { TaskInput } from '../features/tasks/TaskInput';
 import { TaskList } from '../features/tasks/TaskList';
 import { useWorkspaceStore } from '../features/workspace/workspace.store';
 import { WorkspaceSwitcher } from '../features/workspace/WorkspaceSwitcher';
-
 // function getGreeting(): string {
 //   const h = new Date().getHours();
 //   if (h < 12) return 'Good morning';
@@ -32,9 +31,12 @@ function getTodayShort(): string {
 }
 
 export function App() {
-  const [time, setTime] = useState(getFormattedTime);
+  const [, setTime] = useState(getFormattedTime);
   const bootstrap = useWorkspaceStore((s) => s.bootstrap);
   const isBootstrapped = useWorkspaceStore((s) => s.isBootstrapped);
+  const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+
+  const activeWorkspaceColor = activeWorkspace?.color ?? '#000';
 
   useEffect(() => {
     bootstrap();
@@ -48,75 +50,52 @@ export function App() {
   if (!isBootstrapped) return null;
 
   return (
-    <div className="app">
+    <div className="min-vh-100 d-flex flex-column bg-dark text-light">
       {/* ── Header ─────────────────────────── */}
-      <header className="app-header">
-        <div className="app-brand">
-          <div className="app-logo" aria-hidden="true">T</div>
-          <div>
-            <h1 className="app-name">Tabspace</h1>
+      <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary px-3">
+        <div className="container-fluid">
+          {/* Tabspace along with icon with the starting letter e.g. T in case of Tabspace and the color of the icon should be same as the active workspace color*/}
+          <a className="navbar-brand d-flex align-items-center fw-bold" href="#">
+            <span className='me-2 d-flex align-items-center justify-content-center' style={{ fontSize: '1rem', width: '24px', height: '24px', backgroundColor: activeWorkspaceColor, color: '#fff', borderRadius: '50%' }}>{'T'}</span>Tabspace
+          </a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <WorkspaceSwitcher />
+              </li>
+            </ul>
+            <form className="d-flex">
+              <input className="form-control me-2 bg-dark text-light border-secondary" type="search" placeholder="Search" aria-label="Search" />
+              <button className="btn btn-outline-primary" type="submit">Search</button>
+            </form>
           </div>
-          <WorkspaceSwitcher />
         </div>
-
-        <div className="app-header-right">
-          <span className="app-time" aria-live="polite" aria-label="Current time">{time}</span>
-        </div>
-      </header>
+      </nav>
 
       {/* ── Main ───────────────────────────── */}
-      <main className="app-main" id="main-content">
-        {/* Workspace column */}
-        {/* <section className="workspace-panel" aria-label="Workspace">
-          <div className="workspace-greeting">
-            <p className="workspace-greeting-time">{getFormattedDate()}</p>
-            <p className="workspace-greeting-title">
-              <span>{getGreeting()}</span> — let's get to work.
-            </p>
-          </div> */}
+      <main className="container py-5 flex-grow-1" id="main-content">
+        <div className="row justify-content-center">
+          <div className="col-lg-8 col-xl-6">
+            {/* Task column */}
+            <section aria-label="Today's tasks">
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h2 className="fs-4 fw-semibold mb-0 d-flex align-items-center gap-2">
+                  <span className="badge bg-primary rounded-1"><i className="bi bi-check-lg"></i>✓</span>
+                  Tasks
+                </h2>
+                <span className="text-secondary small">{getTodayShort()}</span>
+              </div>
 
-        {/* Workspace placeholder */}
-        {/* <div
-            className="workspace-placeholder"
-            role="region"
-            aria-label="Workspace canvas (coming soon)"
-
-          >
-            <div className="workspace-placeholder-icon">
-              <svg viewBox="0 0 64 64" fill="none" width="56" height="56">
-                <rect x="4" y="10" width="56" height="40" rx="6" stroke="currentColor" strokeWidth="2" />
-                <rect x="12" y="18" width="18" height="14" rx="3" stroke="currentColor" strokeWidth="1.5" />
-                <rect x="12" y="36" width="40" height="4" rx="2" fill="currentColor" opacity="0.2" />
-                <rect x="34" y="18" width="18" height="6" rx="2" fill="currentColor" opacity="0.2" />
-                <rect x="34" y="28" width="12" height="4" rx="2" fill="currentColor" opacity="0.15" />
-              </svg>
-            </div>
-            <p className="workspace-placeholder-title">Workspace</p>
-            <p className="workspace-placeholder-sub">
-              Your workspace canvas will appear here. Modules, notes, and context coming in future releases.
-            </p>
-            <span className="workspace-placeholder-badge">
-              <svg viewBox="0 0 8 8" fill="currentColor" width="6" height="6">
-                <circle cx="4" cy="4" r="4" />
-              </svg>
-              Coming in PRD 02
-            </span>
-          </div> */}
-        {/* </section> */}
-
-        {/* Task column */}
-        <section className="task-panel" aria-label="Today's tasks">
-          <div className="task-panel-header">
-            <h2 className="task-panel-title">
-              <span className="task-panel-title-icon">✓</span>
-              Tasks
-            </h2>
-            <span className="task-panel-date">{getTodayShort()}</span>
+              <TaskInput />
+              <div className="mt-4">
+                <TaskList />
+              </div>
+            </section>
           </div>
-
-          <TaskInput />
-          <TaskList />
-        </section>
+        </div>
       </main>
     </div>
   );

@@ -16,12 +16,12 @@ export function TaskInput() {
   };
 
   return (
-    <form className="task-input-form" onSubmit={handleSubmit}>
-      <div className="task-input-wrapper">
-        <span className="task-input-icon">+</span>
+    <form onSubmit={handleSubmit}>
+      <div className="input-group">
+        <span className="input-group-text bg-dark text-secondary border-secondary border-end-0 bg-transparent px-3">+</span>
         <input
           id="task-input"
-          className="task-input"
+          className="form-control bg-dark text-light border-secondary border-start-0 shadow-none ps-0"
           type="text"
           placeholder="Add a task and press Enter..."
           value={value}
@@ -31,7 +31,7 @@ export function TaskInput() {
         />
         <button
           id="task-submit-btn"
-          className="task-submit-btn"
+          className="btn btn-primary px-4"
           type="submit"
           disabled={!value.trim()}
           aria-label="Add task"

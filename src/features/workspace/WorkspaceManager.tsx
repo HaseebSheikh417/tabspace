@@ -27,37 +27,37 @@ export function WorkspaceManager({ isOpen, onClose }: { isOpen: boolean; onClose
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content workspace-manager-modal">
-        <div className="modal-header">
-          <h2 className="modal-title">Manage Workspaces</h2>
-          <button className="modal-close" onClick={onClose} aria-label="Close">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="modal-body">
-          <ul className="workspace-manage-list">
-            {workspaces.map((ws) => (
-              <li key={ws.id} className="workspace-manage-item">
-                <div className="workspace-manage-info">
-                  <span className="workspace-manage-name">{ws.name}</span>
-                  {ws.isDefault && <span className="workspace-badge">Default</span>}
-                  {ws.id === activeWorkspace?.id && <span className="workspace-badge workspace-badge--active">Active</span>}
-                </div>
-                <div className="workspace-manage-actions">
-                  {ws.id !== activeWorkspace?.id && (
-                    <button className="btn-text" onClick={() => switchWorkspace(ws.id)}>Switch</button>
-                  )}
-                  <button className="btn-text" onClick={() => handleRename(ws.id, ws.name)}>Rename</button>
-                  {!ws.isDefault && (
-                    <button className="btn-text btn-text--danger" onClick={() => handleDelete(ws.id, ws.name)}>Delete</button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+    <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex={-1} data-bs-theme="dark">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content text-bg-dark border-secondary">
+          <div className="modal-header border-secondary">
+            <h5 className="modal-title">Manage Workspaces</h5>
+            <button type="button" className="btn-close btn-close-white" onClick={onClose} aria-label="Close"></button>
+          </div>
+          <div className="modal-body p-0">
+            <ul className="list-group list-group-flush rounded-bottom">
+              {workspaces.map((ws) => (
+                <li key={ws.id} className="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center py-3">
+                  <div className="d-flex flex-column">
+                    <span className="fw-semibold mb-1">{ws.name}</span>
+                    <div className="d-flex gap-2">
+                      {ws.isDefault && <span className="badge bg-secondary">Default</span>}
+                      {ws.id === activeWorkspace?.id && <span className="badge bg-primary">Active</span>}
+                    </div>
+                  </div>
+                  <div className="d-flex gap-2">
+                    {ws.id !== activeWorkspace?.id && (
+                      <button className="btn btn-sm btn-outline-light" onClick={() => switchWorkspace(ws.id)}>Switch</button>
+                    )}
+                    <button className="btn btn-sm btn-outline-light" onClick={() => handleRename(ws.id, ws.name)}>Rename</button>
+                    {!ws.isDefault && (
+                      <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(ws.id, ws.name)}>Delete</button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
