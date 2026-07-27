@@ -10,9 +10,9 @@ function TaskItem({ task }: { task: Task }) {
   return (
     <li className={`list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center ${task.completed ? 'opacity-50' : ''}`}>
       <div className="d-flex align-items-center gap-3 flex-grow-1">
-        <input 
-          className="form-check-input mt-0 bg-dark border-secondary" 
-          type="checkbox" 
+        <input
+          className="form-check-input mt-0 bg-dark border-secondary"
+          type="checkbox"
           checked={task.completed}
           onChange={() => toggleTask(task.id)}
           aria-label={task.completed ? 'Mark incomplete' : 'Mark complete'}
@@ -41,6 +41,8 @@ export function TaskList() {
   const loadTasks = useTaskStore((s) => s.loadTasks);
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
 
+  console.log(`====================tasks====================`, tasks);
+
   // Reload tasks whenever the active workspace changes
   useEffect(() => {
     if (activeWorkspace) {
@@ -50,7 +52,6 @@ export function TaskList() {
 
   const pending = tasks.filter((t) => !t.completed);
   const completed = tasks.filter((t) => t.completed);
-
   if (tasks.length === 0) {
     return (
       <div className="d-flex flex-column align-items-center justify-content-center p-5 text-center border border-secondary border-dashed rounded bg-dark">

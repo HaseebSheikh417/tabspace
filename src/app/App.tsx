@@ -4,24 +4,12 @@ import { TaskList } from '../features/tasks/TaskList';
 import { useWorkspaceStore } from '../features/workspace/workspace.store';
 import { WorkspaceSwitcher } from '../features/workspace/WorkspaceSwitcher';
 import { Link } from 'react-router-dom';
-// function getGreeting(): string {
-//   const h = new Date().getHours();
-//   if (h < 12) return 'Good morning';
-//   if (h < 18) return 'Good afternoon';
-//   return 'Good evening';
-// }
+import { useAuth } from '../features/auth/hooks/useAuth';
+
 
 function getFormattedTime(): string {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
-
-// function getFormattedDate(): string {
-//   return new Date().toLocaleDateString([], {
-//     weekday: 'long',
-//     month: 'long',
-//     day: 'numeric',
-//   });
-// }
 
 function getTodayShort(): string {
   return new Date().toLocaleDateString([], {
@@ -36,6 +24,8 @@ export function App() {
   const bootstrap = useWorkspaceStore((s) => s.bootstrap);
   const isBootstrapped = useWorkspaceStore((s) => s.isBootstrapped);
   const activeWorkspace = useWorkspaceStore((state) => state.activeWorkspace);
+
+  const { isAuthenticated, user, logout } = useAuth();
 
   const activeWorkspaceColor = activeWorkspace?.color ?? '#000';
 
@@ -55,29 +45,62 @@ export function App() {
       {/* ── Header ─────────────────────────── */}
       <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary px-3">
         <div className="container-fluid">
-          {/* Tabspace along with icon with the starting letter e.g. T in case of Tabspace and the color of the icon should be same as the active workspace color*/}
           <a className="navbar-brand d-flex align-items-center fw-bold" href="#">
-            <span className='me-2 d-flex align-items-center justify-content-center' style={{ fontSize: '1rem', width: '24px', height: '24px', backgroundColor: activeWorkspaceColor, color: '#fff', borderRadius: '50%' }}>{'T'}</span>Tabspace
+            <span
+              className="me-2 d-flex align-items-center justify-content-center"
+              style={{ fontSize: '1rem', width: '24px', height: '24px', backgroundColor: activeWorkspaceColor, color: '#fff', borderRadius: '50%' }}
+            >
+              T
+            </span>
+            Tabspace
           </a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
+
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon" />
           </button>
+
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <WorkspaceSwitcher />
               </li>
             </ul>
-            <form className="d-flex">
-              {false ? (
-                <button className="btn btn-outline-primary">Logout</button>
+
+            <div className="d-flex align-items-center gap-2">
+              {isAuthenticated ? (
+                <>
+                  {user && (
+                    <span className="text-secondary small me-1">
+                      {user.name}
+                    </span>
+                  )}
+                  <button
+                    id="logout-btn"
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </button>
+                </>
               ) : (
                 <>
-                  <Link to="/login" className="btn btn-outline-primary me-2">Login</Link>
-                  <Link to="/register" className="btn btn-outline-primary">Register</Link>
+                  <Link to="/login" className="btn btn-outline-primary btn-sm">
+                    Login
+                  </Link>
+                  <Link to="/register" className="btn btn-primary btn-sm">
+                    Register
+                  </Link>
                 </>
               )}
-            </form>
+            </div>
           </div>
         </div>
       </nav>
@@ -90,7 +113,7 @@ export function App() {
             <section aria-label="Today's tasks">
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <h2 className="fs-4 fw-semibold mb-0 d-flex align-items-center gap-2">
-                  <span className="badge bg-primary rounded-1"><i className="bi bi-check-lg"></i>✓</span>
+                  <span className="badge bg-primary rounded-1">✓</span>
                   Tasks
                 </h2>
                 <span className="text-secondary small">{getTodayShort()}</span>
