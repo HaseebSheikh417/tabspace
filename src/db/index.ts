@@ -5,11 +5,13 @@ import type {
   Workspace,
   AppSetting,
 } from '../features/workspace/workspace.types';
+import type { QuickLink } from '../features/quicklinks/quicklink.types';
 
 export type TabspaceDatabase = Dexie & {
   tasks: Dexie.Table<Task, string>;
   workspaces: Dexie.Table<Workspace, string>;
   app_settings: Dexie.Table<AppSetting, string>;
+  quick_links: Dexie.Table<QuickLink, string>;
 };
 
 export const db = new Dexie('tabspace_db') as TabspaceDatabase;
@@ -31,3 +33,10 @@ db.version(2)
       }
     });
   });
+
+db.version(3).stores({
+  tasks: 'id, workspaceId, completed, createdAt, updatedAt',
+  workspaces: 'id, isDefault, createdAt',
+  app_settings: 'key',
+  quick_links: 'id, workspaceId, displayOrder, createdAt',
+});

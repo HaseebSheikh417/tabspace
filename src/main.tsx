@@ -10,6 +10,7 @@ import { Register } from './features/auth/Register';
 import { useAuth } from './features/auth/hooks/useAuth';
 import { AuthStatus } from './features/auth/types/auth.enums';
 import { useTaskStore } from './features/tasks/task.store';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 /**
  * AuthGate — runs once on app mount to restore the session from persisted

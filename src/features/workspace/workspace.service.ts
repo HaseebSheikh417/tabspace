@@ -81,8 +81,9 @@ export const workspaceService = {
     if (!workspace) throw new Error('Workspace not found.');
     if (workspace.isDefault) throw new Error('The default workspace cannot be deleted.');
 
-    // Delete all tasks belonging to this workspace
+    // Delete all tasks and quick links belonging to this workspace
     await db.tasks.where('workspaceId').equals(id).delete();
+    await db.quick_links.where('workspaceId').equals(id).delete();
     await db.workspaces.delete(id);
   },
 

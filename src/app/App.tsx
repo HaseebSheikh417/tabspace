@@ -3,6 +3,7 @@ import { TaskInput } from '../features/tasks/TaskInput';
 import { TaskList } from '../features/tasks/TaskList';
 import { useWorkspaceStore } from '../features/workspace/workspace.store';
 import { WorkspaceSwitcher } from '../features/workspace/WorkspaceSwitcher';
+import { QuickLinkBar } from '../features/quicklinks/QuickLinkBar';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/hooks/useAuth';
 
@@ -104,6 +105,9 @@ export function App() {
           </div>
         </div>
       </nav>
+
+      {/* ── Quick Links ──────────────────────────────────── */}
+      <QuickLinkBar />
 
       {/* ── Main ───────────────────────────── */}
       <main className="container py-5 flex-grow-1" id="main-content">
